@@ -1,0 +1,22 @@
+{
+  "name": "advent-2019",
+  "version": "1.0.0",
+  "description": "Collection of solutions to the Advent of Code 2019 code challenges.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Silaril/advent-2019.git"
+  },
+  "author": "Silaril",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Silaril/advent-2019/issues"
+  },
+  "homepage": "https://github.com/Silaril/advent-2019#readme",
+  "dependencies": {
+    "advent-of-code": "^4.0.3"
+  }
+}
