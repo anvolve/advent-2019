@@ -3,41 +3,37 @@
 const fs = require('fs');
 const readline = require('readline');
 
+const sum = (a, b) => a + b;
+
 // Part 1
 // ======
 
 const part1 = input => {
-  let result = 0;
-  const input_values = input.split("\n");
-  input_values.forEach(element => {
-    element = (Math.floor(element / 3)) - 2;
-    result += element;
-  });
-  return result;
+  return input.split("\n")
+    .map(simpleFuelCalculation)
+    .reduce(sum);
 }
+
+const simpleFuelCalculation = mass => (Math.floor(mass / 3)) - 2;
 
 // Part 2
 // ======
 
 const part2 = input => {
-  let result = 0;
-  const input_values = input.split("\n");
-  input_values.forEach(element => {
-    let mass = element;
-    let fuel_needed = 0;
-    let foo = 0;
-    while (true) {
-      foo = (Math.floor(mass / 3)) - 2;
-      if (foo > 0) {
-        fuel_needed += foo;
-        mass = foo;
-      } else {
-        break;
-      }
-    }
-    result += fuel_needed
-  });
-  return result;
+
+  return input.split("\n")
+    .map(advancedFuelCalculation)
+    .reduce(sum);
+}
+
+const advancedFuelCalculation = mass => {
+  let sum = 0;
+  let fuel_needed = simpleFuelCalculation(mass);
+  while (fuel_needed > 0) {
+    sum += fuel_needed;
+    fuel_needed = simpleFuelCalculation(fuel_needed);
+  }
+  return sum;
 }
 
 module.exports = { part1, part2 }
