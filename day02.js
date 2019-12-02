@@ -1,13 +1,9 @@
-'use strict'
+'use strict';
 
-// Part 1
-// ======
-
-const part1 = input => {
-  let memory = input.split(',').map(Number);
-  
-  memory[1] = 12;
-  memory[2] = 2;
+function runIntcodeProgram(passedMemory, noun, verb) {
+  let memory = JSON.parse((JSON.stringify(passedMemory)));
+  memory[1] = noun;
+  memory[2] = verb;
 
   for (let instructionPointer = 0; instructionPointer <= memory.length; instructionPointer += 4) {
     const opcode = memory[instructionPointer];
@@ -27,11 +23,32 @@ const part1 = input => {
   }
 }
 
+// Part 1
+// ======
+
+const part1 = input => {
+  let initialMemory = input.split(',').map(Number);
+
+  return runIntcodeProgram(initialMemory, 12, 2);
+};
+
 // Part 2
 // ======
 
 const part2 = input => {
-  return input
-}
+  const expectedOutput = 19690720;
+  let initialMemory = input.split(',').map(Number);
+  let actualOutput;
 
-module.exports = { part1, part2 }
+  for (let noun = 0; noun < 100; noun++) {
+    for (let verb = 0; verb < 100; verb++) {
+      actualOutput = runIntcodeProgram(initialMemory, noun, verb);
+      if (actualOutput === expectedOutput) {
+        return 100 * noun + verb;
+      }
+    }
+  }
+  return "I couldn't find a solution for you :("
+};
+
+module.exports = {part1, part2};
