@@ -1,8 +1,5 @@
 'use strict'
 
-const fs = require('fs');
-const readline = require('readline');
-
 const sum = (a, b) => a + b;
 
 // Part 1
