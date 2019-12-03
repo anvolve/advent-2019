@@ -4,16 +4,7 @@
 // ======
 
 const part1 = input => {
-    const wires = input.split('\n');
-    let instructions1 = wires[0].split(',');
-    let instructions2 = wires[1].split(',');
-
-    const wirePoints1 = parseWirePoints(instructions1);
-    const wirePoints2 = parseWirePoints(instructions2);
-
-    const intersections = getIntersections(wirePoints1, wirePoints2);
-    console.log("Intersections are: " + intersections);
-
+    const intersections = getIntersectingPoints(input);
     return getClosestDistance(intersections);
 };
 
@@ -21,15 +12,28 @@ const part1 = input => {
 // ======
 
 const part2 = input => {
-    return input
+    const intersections = getIntersectingPoints(input);
+    return getShortestStepCount(intersections);
 };
 
 module.exports = {part1, part2};
+
+function getIntersectingPoints(input) {
+    const wires = input.split('\n');
+    let instructions1 = wires[0].split(',');
+    let instructions2 = wires[1].split(',');
+
+    const wirePoints1 = parseWirePoints(instructions1);
+    const wirePoints2 = parseWirePoints(instructions2);
+
+    return getIntersections(wirePoints1, wirePoints2);
+}
 
 function parseWirePoints(instructions) {
     let wirePoints = [];
     let x = 0;
     let y = 0;
+    let counter = 0;
     const instructionLength = instructions.length;
     for (let i = 0; i < instructionLength; i++) {
         const instruction = instructions[i];
@@ -37,22 +41,22 @@ function parseWirePoints(instructions) {
         switch (instruction.charAt(0)) {
             case 'D':
                 for (let j = 0; j < steps; j++) {
-                    wirePoints.push({x: x, y: --y});
+                    wirePoints.push({x: x, y: --y, steps: ++counter});
                 }
                 break;
             case 'U':
                 for (let j = 0; j < steps; j++) {
-                    wirePoints.push({x: x, y: ++y});
+                    wirePoints.push({x: x, y: ++y, steps: ++counter});
                 }
                 break;
             case 'L':
                 for (let j = 0; j < steps; j++) {
-                    wirePoints.push({x: --x, y: y});
+                    wirePoints.push({x: --x, y: y, steps: ++counter});
                 }
                 break;
             case 'R':
                 for (let j = 0; j < steps; j++) {
-                    wirePoints.push({x: ++x, y: y});
+                    wirePoints.push({x: ++x, y: y, steps: ++counter});
                 }
                 break;
         }
@@ -65,6 +69,7 @@ function getIntersections(wirePoints1, wirePoints2) {
     wirePoints1.forEach(function (point) {
         wirePoints2.forEach(function (point2) {
             if (point.x == point2.x && point.y == point2.y) {
+                point.steps += point2.steps;
                 intersections.push(point);
             }
         })
@@ -85,4 +90,12 @@ function getDistance(intersection) {
     let distanceY = intersection.y < 0 ? intersection.y * -1 : intersection.y;
 
     return distanceX + distanceY;
+}
+
+function getShortestStepCount(intersections) {
+    let steps = intersections[0].steps;
+    intersections.forEach(point => {
+        steps = Math.min(steps, point.steps)
+    });
+    return steps;
 }
