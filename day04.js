@@ -3,7 +3,7 @@
 // Part 1
 // ======
 
-const part1 = input => {
+function findSolution(input, isValidPassword) {
     const range = input.split('-');
     const lowest = parseInt(range[0]);
     const highest = parseInt(range[1]);
@@ -15,11 +15,16 @@ const part1 = input => {
         }
     }
     return counter;
+}
+
+const hasNoDecrease = digits => (!(digits[0] > digits[1] || digits[1] > digits[2] || digits[2] > digits[3] || digits[3] > digits[4] || digits[4] > digits[5]));
+
+const part1 = input => {
+    return findSolution(input, isValidPassword);
 
     function isValidPassword(digits) {
         const hasDouble = (digits[0] === digits[1] || digits[1] === digits[2] || digits[2] === digits[3] || digits[3] === digits[4] || digits[4] === digits[5]);
-        const noDecrease = (!(digits[0] > digits[1] || digits[1] > digits[2] || digits[2] > digits[3] || digits[3] > digits[4] || digits[4] > digits[5]));
-        return hasDouble && noDecrease;
+        return hasDouble && hasNoDecrease(digits);
     }
 };
 
@@ -27,17 +32,7 @@ const part1 = input => {
 // ======
 
 const part2 = input => {
-    const range = input.split('-');
-    const lowest = parseInt(range[0]);
-    const highest = parseInt(range[1]);
-    let counter = 0;
-
-    for (let i = lowest; i <= highest; i++) {
-        if (isValidPassword((i).toString(10).split(""))) {
-            counter++;
-        }
-    }
-    return counter;
+    return findSolution(input, isValidPassword);
 
     function isValidPassword(digits) {
         const hasDoubleNotTriple = (
@@ -46,8 +41,7 @@ const part2 = input => {
             || (digits[2] === digits[3] && digits[1] !== digits[2] && digits[3] !== digits[4])
             || (digits[3] === digits[4] && digits[2] !== digits[3] && digits[4] !== digits[5])
             || (digits[4] === digits[5] && digits[3] !== digits[4]));
-        const noDecrease = (!(digits[0] > digits[1] || digits[1] > digits[2] || digits[2] > digits[3] || digits[3] > digits[4] || digits[4] > digits[5]));
-        return hasDoubleNotTriple && noDecrease;
+        return hasDoubleNotTriple && hasNoDecrease(digits);
     }
 };
 
