@@ -51,6 +51,38 @@ function runIntcodeProgram(memory, input) {
 
                 instructionPointer += 2;
                 break;
+            case 5:
+                paramModes = parseParamModes(instructionCode, 2);
+                param1 = fillParam(paramModes[0], memory, instructionPointer + 1);
+                param2 = fillParam(paramModes[1], memory, instructionPointer + 2);
+
+                instructionPointer = param1 ? param2 : instructionPointer + 3;
+                break;
+            case 6:
+                paramModes = parseParamModes(instructionCode, 2);
+                param1 = fillParam(paramModes[0], memory, instructionPointer + 1);
+                param2 = fillParam(paramModes[1], memory, instructionPointer + 2);
+
+                instructionPointer = param1 ? instructionPointer + 3 : param2;
+                break;
+            case 7:
+                paramModes = parseParamModes(instructionCode, 2);
+                param1 = fillParam(paramModes[0], memory, instructionPointer + 1);
+                param2 = fillParam(paramModes[1], memory, instructionPointer + 2);
+                param3 = fillParam('1', memory, instructionPointer + 3);
+
+                memory[param3] = param1 < param2 ? 1 : 0;
+                instructionPointer += 4;
+                break;
+            case 8:
+                paramModes = parseParamModes(instructionCode, 2);
+                param1 = fillParam(paramModes[0], memory, instructionPointer + 1);
+                param2 = fillParam(paramModes[1], memory, instructionPointer + 2);
+                param3 = fillParam('1', memory, instructionPointer + 3);
+
+                memory[param3] = param1 === param2 ? 1 : 0;
+                instructionPointer += 4;
+                break;
             case 99:
                 instructionPointer = memory.length;
                 break;
@@ -89,16 +121,14 @@ function fillParam(paramMode, memory, instructionPointer) {
 const part1 = input => {
     let initialMemory = input.split(',').map(Number);
     runIntcodeProgram(initialMemory, 1);
-    return 0;
 };
 
 // Part 2
 // ======
 
 const part2 = input => {
-    return input
+    let initialMemory = input.split(',').map(Number);
+    runIntcodeProgram(initialMemory, 5);
 };
 
 module.exports = {part1, part2};
-
-part1(process.argv[2]);
