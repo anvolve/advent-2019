@@ -10,12 +10,13 @@ function fillOrbits(input) {
     orbitStrings.forEach(orbitString => {
         const [centerMass, orbiter] = orbitString.split(')');
         if (!orbits[orbiter]) {
-            orbits[orbiter] = {children: []};
+            orbits[orbiter] = {children: [], parent: ''};
         }
         if (!orbits[centerMass]) {
-            orbits[centerMass] = {children: []};
+            orbits[centerMass] = {children: [], parent: ''};
         }
         orbits[centerMass].children.push(orbiter);
+        orbits[orbiter].parent = centerMass;
     });
 }
 
@@ -27,6 +28,30 @@ function recursiveCount(mass, level) {
     return count;
 }
 
+function findAllParents(mass) {
+    let parents = [];
+    while (mass !== 'COM') {
+        mass = orbits[mass].parent;
+        parents.push(mass);
+    }
+    return parents;
+}
+
+function findClosestTraversalDistance() {
+    let yourParents = findAllParents('YOU');
+    let santasParents = findAllParents('SAN');
+    const yLength = yourParents.length;
+    const sLength = santasParents.length;
+
+    for (let i = 0; i < yLength; i++) {
+        for (let j = 0; j < sLength; j++) {
+            if (yourParents[i] === santasParents[j]) {
+                return i + j;
+            }
+        }
+    }
+}
+
 const part1 = input => {
     fillOrbits(input);
     return recursiveCount('COM', 0);
@@ -36,7 +61,8 @@ const part1 = input => {
 // ======
 
 const part2 = input => {
-    return input
+    fillOrbits(input);
+    return findClosestTraversalDistance();
 };
 
 module.exports = {part1, part2};
